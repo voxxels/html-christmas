@@ -1,11 +1,536 @@
-<!html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <body>
-<h1> my website!1!</h1>
-  <h2> thank you boba drops for the amazing opportunity</h2>
-    <img src="giphy.gif">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack Club Boba</title>
+    <style>
+        :root {
+            --primary: #5865F2;
+            --secondary: #FF73FA;
+            --dark: #2C2F33;
+            --darker: #23272A;
+            --light: #F6F6F6;
+            --success: #57F287;
+            --danger: #ED4245;
+            --warning: #FEE75C;
+            --boba-brown: #6F4E37;
+            --boba-pink: #FFC0CB;
+            --boba-teal: #30CED8;
+            --boba-purple: #9B5DE5;
+        }
 
-  
-</body>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 72px;
+            background-color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--darker);
+            border-radius: 50%;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-radius 0.2s, background-color 0.2s;
+            position: relative;
+            color: var(--light);
+            text-decoration: none;
+        }
+
+        .sidebar-icon:hover {
+            border-radius: 16px;
+            background-color: var(--primary);
+        }
+
+        .sidebar-icon.active {
+            border-radius: 16px;
+            background-color: var(--primary);
+        }
+
+        .sidebar-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 8px;
+            height: 40%;
+            background-color: var(--light);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-icon img {
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+        }
+
+        .sidebar-divider {
+            height: 2px;
+            width: 32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+
+        .channels {
+            width: 240px;
+            background-color: #2e3136;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .channel-header {
+            padding: 16px;
+            font-weight: bold;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .channel-list {
+            padding: 0 8px;
+        }
+
+        .channel {
+            padding: 8px 12px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #8e9297;
+            font-weight: 500;
+        }
+
+        .channel:hover {
+            background-color: rgba(79, 84, 92, 0.3);
+            color: var(--light);
+        }
+
+        .channel.active {
+            background-color: rgba(79, 84, 92, 0.6);
+            color: var(--light);
+        }
+
+        .channel-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #36393f;
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 16px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .content-header-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 24px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 16px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #8e9297;
+        }
+
+        .message-text {
+            color: #dcddde;
+        }
+
+        .message-image {
+            max-width: 300px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .boba-section {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .boba-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--boba-teal);
+        }
+
+        .boba-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .boba-card {
+            background: linear-gradient(135deg, var(--dark), #363a3f);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .boba-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .boba-img {
+            height: 150px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .boba-info {
+            padding: 16px;
+        }
+
+        .boba-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--light);
+        }
+
+        .boba-desc {
+            color: #b9bbbe;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .boba-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: var(--boba-purple);
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .event-section {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .event-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--warning);
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, var(--dark), #363a3f);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .event-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--light);
+        }
+
+        .event-date {
+            color: #b9bbbe;
+            font-size: 14px;
+        }
+
+        .event-desc {
+            color: #b9bbbe;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .event-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .event-button:hover {
+            background-color: #4752c4;
+        }
+
+        .join-section {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--boba-purple), var(--primary));
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .join-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        .join-text {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .join-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: white;
+            color: var(--primary);
+            border-radius: 4px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .join-button:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #8e9297;
+        }
+
+        /* Boba animation */
+        .boba-animation {
+            position: relative;
+            height: 100px;
+            width: 100%;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: rise 3s infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                padding: 0 16px;
+            }
+
+            .sidebar-icon {
+                margin-right: 12px;
+                margin-bottom: 0;
+            }
+
+            .channels {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .channel-header {
+                display: none;
+            }
+
+            .channel-list {
+                display: flex;
+                padding: 0 16px;
+            }
+
+            .channel {
+                margin-right: 16px;
+            }
+
+            .content {
+                height: calc(100vh - 120px);
+            }
+        }
+    </style>
 </head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <a href="#" class="sidebar-icon active">
+                <img src="/api/placeholder/48/48" alt="HC">
+            </a>
+            <a href="#" class="sidebar-icon">
+                <img src="/api/placeholder/48/48" alt="Boba">
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="#" class="sidebar-icon">
+                <img src="/api/placeholder/48/48" alt="Events">
+            </a>
+            <a href="#" class="sidebar-icon">
+                <img src="/api/placeholder/48/48" alt="Projects">
+            </a>
+            <a href="#" class="sidebar-icon">
+                <img src="/api/placeholder/48/48" alt="Resources">
+            </a>
+        </div>
 
+        <div class="channels">
+            <div class="channel-header">
+                Hack Club Boba
+            </div>
+            <div class="channel-list">
+                <div class="channel active">
+                    <span class="channel-icon">#</span> welcome
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> announcements
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> boba-recipes
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> hackathons
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> projects
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> resources
+                </div>
+                <div class="channel">
+                    <span class="channel-icon">#</span> help
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="content-header">
+                <span class="content-header-icon">#</span> welcome
+            </div>
+            <div class="messages">
+                <div class="message">
+                    <div class="message-avatar">HC</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-author">HackBot</div>
+                            <div class="message-time">Today at 12:34 PM</div>
+                        </div>
+                        <div class="message-text">
+                            Welcome to Hack Club Boba! 🧋 This is where teenage coders come together to create awesome projects and enjoy delicious boba tea!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="boba-section">
+                    <div class="boba-title">🧋 BOBA MENU</div>
+                    <div class="boba-animation">
+                        <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
+                        <div class="bubble" style="left: 30%; animation-delay: 0.5s;"></div>
+                        
